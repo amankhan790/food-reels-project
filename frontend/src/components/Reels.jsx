@@ -39,6 +39,8 @@ export default function Reels() {
           // controller returns { message, foodItems }
           const items = Array.isArray(data.foodItems) ? data.foodItems : [];
           setReels(items);
+          console.log(items);
+
           // initialize liked/saved state from server data and localStorage
           const savedIds = JSON.parse(localStorage.getItem("savedReels")) || [];
           const initLiked = {};
@@ -107,6 +109,8 @@ export default function Reels() {
 
   const toggleLike = (ev, id) => {
     ev.stopPropagation();
+    
+    likeVideo(reels.find((r) => r._id === id));
     setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -207,10 +211,22 @@ export default function Reels() {
               onClick={(ev) => toggleLike(ev, r._id)}
               aria-label="like"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 21s-7.5-4.9-10-8.2C-1 6.2 5.4 2 8.6 5.1 10 6.6 12 9 12 9s2-2.4 3.4-3.9C18.6 2 25 6.2 22 12.8 19.5 16.1 12 21 12 21z" stroke="none" fill="currentColor"/>
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 21s-7.5-4.9-10-8.2C-1 6.2 5.4 2 8.6 5.1 10 6.6 12 9 12 9s2-2.4 3.4-3.9C18.6 2 25 6.2 22 12.8 19.5 16.1 12 21 12 21z"
+                  stroke="none"
+                  fill="currentColor"
+                />
               </svg>
-              <div className="action-count">{(r.likes || 0) + (liked[r._id] ? 1 : 0)}</div>
+              <div className="action-count">
+                {(r.likes || 0) + (liked[r._id] ? 1 : 0)}
+              </div>
             </button>
 
             <button
@@ -218,27 +234,79 @@ export default function Reels() {
               onClick={(ev) => toggleSave(ev, r._id)}
               aria-label="save"
             >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 2h12v18l-6-3-6 3V2z" fill="currentColor"/>
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M6 2h12v18l-6-3-6 3V2z" fill="currentColor" />
               </svg>
-              <div className="action-count">{(r.saves || 0) + (saved[r._id] ? 1 : 0)}</div>
+              <div className="action-count">
+                {(r.saves || 0) + (saved[r._id] ? 1 : 0)}
+              </div>
             </button>
 
-            <button className="action-btn comment" onClick={(ev) => openComments(ev, r._id)} aria-label="comment">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="currentColor"/>
+            <button
+              className="action-btn comment"
+              onClick={(ev) => openComments(ev, r._id)}
+              aria-label="comment"
+            >
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  fill="currentColor"
+                />
               </svg>
               <div className="action-count">{r.comments || 0}</div>
             </button>
           </div>
 
           <nav className="bottom-nav">
-            <button className="nav-btn" onClick={(ev) => { ev.stopPropagation(); navigate('/'); }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z" fill="currentColor"/></svg>
+            <button
+              className="nav-btn"
+              onClick={(ev) => {
+                ev.stopPropagation();
+                navigate("/");
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z"
+                  fill="currentColor"
+                />
+              </svg>
               <div className="nav-label">home</div>
             </button>
-            <button className="nav-btn" onClick={(ev) => { ev.stopPropagation(); navigate('/saved'); }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2h12v18l-6-3-6 3V2z" fill="currentColor"/></svg>
+            <button
+              className="nav-btn"
+              onClick={(ev) => {
+                ev.stopPropagation();
+                navigate("/saved");
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M6 2h12v18l-6-3-6 3V2z" fill="currentColor" />
+              </svg>
               <div className="nav-label">saved</div>
             </button>
           </nav>
