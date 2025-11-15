@@ -33,33 +33,36 @@ async function getAllFood(req, res) {
 
 async function likeFood(req, res) {
   const { foodId } = req.body;
+  const user = req.user;
 
-  const user = req.body;
+  if (!user) {
+    return res.status(401).json({ message: "User not authenticated" });
+  }
 
   const isAlreadyLiked = await likeModel.findOne({
-    user: user_id,
-    foodId: foodId,
+    user: user._id,
+    food: foodId,
   });
 
   if (isAlreadyLiked) {
     await likeModel.deleteOne({
       user: user._id,
-      foodId: foodId,
+      food: foodId,
     });
 
     await foodModel.findByIdAndUpdate(foodId, {
-      $inc: { likeCount: 1 },
+      $inc: { likeCount: -1 },
     });
 
     return res.status(200).json({
-      messege: "Food Unliked Successfully",
-      n,
+      message: "Food Unliked Successfully",
+      liked: false,
     });
   }
 
   const like = await likeModel.create({
     user: user._id,
-    foodId: foodId,
+    food: foodId,
   });
 
   await foodModel.findByIdAndUpdate(foodId, {
@@ -68,6 +71,7 @@ async function likeFood(req, res) {
 
   res.status(201).json({
     message: "Food Like Successfully",
+    liked: true,
     like,
   });
 }
@@ -76,26 +80,38 @@ async function saveFood(req, res) {
   const { foodId } = req.body;
   const user = req.user;
 
+  if (!user) {
+    return res.status(401).json({ message: "User not authenticated" });
+  }
+
   const isAlreadySaved = await saveModel.findOne({
     user: user._id,
-    foodId: foodId,
+    food: foodId,
   });
   if (isAlreadySaved) {
     await saveModel.deleteOne({
       user: user._id,
-      foodId: foodId,
+      food: foodId,
+    });
+    await foodModel.findByIdAndUpdate(foodId, {
+      $inc: { saveCount: -1 },
     });
     return res.status(200).json({
-      messege: "Food Unsaved Successfully",
+      message: "Food Unsaved Successfully",
+      saved: false,
     });
   }
 
   const save = await saveModel.create({
     user: user._id,
-    foodId: foodId,
+    food: foodId,
+  });
+  await foodModel.findByIdAndUpdate(foodId, {
+    $inc: { saveCount: 1 },
   });
   res.status(201).json({
     message: "Food Saved Successfully",
+    saved: true,
     save,
   });
 }

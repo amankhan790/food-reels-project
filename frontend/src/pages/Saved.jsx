@@ -43,7 +43,7 @@ const Saved = () => {
       <h2 style={{ color: '#fff' }}>Saved</h2>
       <div style={{ display: 'grid', gap: 12 }}>
         {items.map((it) => (
-          <div key={it._id} className="saved-card" onClick={() => navigate('/') }>
+          <div key={it._id} className="save saved-card" onClick={() => navigate('/') }>
             <div style={{ color: '#fff', fontWeight: 600 }}>{it.name || it.description}</div>
             <div style={{ color: '#bbb', fontSize: 13 }}>{it.description}</div>
           </div>

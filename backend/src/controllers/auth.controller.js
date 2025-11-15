@@ -32,9 +32,9 @@ async function registerUser(req, res) {
   );
 
   res.cookie("token", token);
-
   res.status(201).json({
     messege: "user registered successfully",
+    token,
     user: {
       _id: user._id,
       email: user.email,
@@ -66,15 +66,15 @@ async function loginUser(req, res) {
 
   const token = jwt.sign(
     {
-      _id: user._id,
+      id: user._id,
     },
     process.env.JWT_SECRET
   );
 
   res.cookie("token", token);
-
   res.status(200).json({
     messege: "User logged in succesfully",
+    token,
     user: {
       _id: user._id,
       email: user.email,
@@ -122,9 +122,9 @@ async function registerFoodPartner(req, res) {
   );
 
   res.cookie("token", token);
-
   res.status(201).json({
     messege: "Food Partner registered successfully",
+    token,
     foodPartner: {
       _id: foodPartner._id,
       email: foodPartner.email,
@@ -164,9 +164,9 @@ async function loginFoodPartner(req, res) {
   );
 
   res.cookie("token", token);
-
   res.status(200).json({
     messege: "Food Partner logged in successfully",
+    token,
     foodPartner: {
       _id: foodPartner._id,
       email: foodPartner.email,

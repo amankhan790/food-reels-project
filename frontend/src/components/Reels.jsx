@@ -147,7 +147,7 @@ export default function Reels() {
 
   const toggleLike = async (ev, id) => {
     ev.stopPropagation();
-    
+
     // optimistic update
     const prevLiked = !!liked[id];
     setLiked((prev) => ({ ...prev, [id]: !prevLiked }));
@@ -166,7 +166,13 @@ export default function Reels() {
       setReels((prev) =>
         prev.map((r) =>
           r._id === id
-            ? { ...r, likes: Math.max(0, (r.likes || 0) + (prevLiked ? 1 : -1)) }
+            ? {
+                ...r,
+                likeCount: Math.max(
+                  0,
+                  (r.likeCount || 0) + (prevLiked ? 1 : -1)
+                ),
+              }
             : r
         )
       );
@@ -188,7 +194,9 @@ export default function Reels() {
     });
     setReels((prev) =>
       prev.map((r) =>
-        r._id === id ? { ...r, saves: (r.saves || 0) + (prevSaved ? -1 : 1) } : r
+        r._id === id
+          ? { ...r, saveCount: (r.saveCount || 0) + (prevSaved ? -1 : 1) }
+          : r
       )
     );
 
@@ -199,7 +207,10 @@ export default function Reels() {
       setReels((prev) =>
         prev.map((r) =>
           r._id === id
-            ? { ...r, saves: Math.max(0, (r.saves || 0) + (prevSaved ? 1 : -1)) }
+            ? {
+                ...r,
+                saves: Math.max(0, (r.saveCount || 0) + (prevSaved ? 1 : -1)),
+              }
             : r
         )
       );
@@ -310,7 +321,7 @@ export default function Reels() {
                 />
               </svg>
               <div className="action-count">
-                {(r.likes || 0) + (liked[r._id] ? 1 : 0)}
+                {(r.likeCount || 0) + (liked[r._id] ? 1 : 0)}
               </div>
             </button>
 
@@ -329,7 +340,7 @@ export default function Reels() {
                 <path d="M6 2h12v18l-6-3-6 3V2z" fill="currentColor" />
               </svg>
               <div className="action-count">
-                {(r.saves || 0) + (saved[r._id] ? 1 : 0)}
+                {(r.saveCount || 0) + (saved[r._id] ? 1 : 0)}
               </div>
             </button>
 

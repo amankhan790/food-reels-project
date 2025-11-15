@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { saveFood } = require("../controllers/food.controller");
 
 const foodSchema = new mongoose.Schema({
   name: {
@@ -17,6 +18,10 @@ const foodSchema = new mongoose.Schema({
     ref: "FoodPartner",
   },
   likeCount: {
+    type: Number,
+    default: 0,
+  },
+  saveCount: {
     type: Number,
     default: 0,
   },

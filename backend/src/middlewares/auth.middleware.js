@@ -3,7 +3,13 @@ const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 
 async function foodPartnerAuthMiddleware(req, res, next) {
-  const token = req.cookies.token;
+  let token = req.cookies && req.cookies.token;
+  if (!token) {
+    const authHeader = req.headers && req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+  }
 
   if (!token) {
     return res.status(401).json({
@@ -27,7 +33,13 @@ async function foodPartnerAuthMiddleware(req, res, next) {
 }
 
 async function authUserMiddleware(req, res, next) {
-  const token = req.cookies.token;
+  let token = req.cookies && req.cookies.token;
+  if (!token) {
+    const authHeader = req.headers && req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+  }
 
   if (!token) {
     return res.status(401).json({

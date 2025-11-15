@@ -35,14 +35,13 @@
   left: 0;
   right: 0;
   height: 140px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0));
+  background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0));
   z-index: 1;
 }
-
 .reel-overlay {
   position: absolute;
-  top: 18px;
-  left: 16px;
+  bottom: 100px;
+  left: 25px;
   right: 16px;
   z-index: 2;
   display: flex;

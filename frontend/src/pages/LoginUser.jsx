@@ -26,6 +26,10 @@ const LoginUser = () => {
       )
       .then((response) => {
         console.log(response.data);
+        // store token from response body (fallback if cookie isn't usable)
+        if (response.data && response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
         Navigate("/");
       })
       .catch((err) => {
