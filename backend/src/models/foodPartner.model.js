@@ -5,6 +5,13 @@ const foodPartnerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ownerName: {
+    type: String,
+  },
+  address: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: true,

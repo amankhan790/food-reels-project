@@ -1,0 +1,27 @@
+:root{
+  /* Light theme defaults */
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #0f1724;
+  --muted: #6b7280;
+  --accent: #ef4444; /* subtle red accent */
+  --input-bg: #ffffff;
+  --shadow: 0 6px 18px rgba(11,15,25,0.06);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b1220;
+    --surface: #0f1724;
+    --text: #e6eef8;
+    --muted: #9aa6b2;
+    --accent: #fb7185;
+    --input-bg: #0b1220;
+    --shadow: 0 6px 24px rgba(2,6,23,0.6);
+  }
+}
+
+/* Helpers that other css can use */
+.theme-transition{
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}

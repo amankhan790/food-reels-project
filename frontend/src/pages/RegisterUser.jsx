@@ -1,0 +1,93 @@
+import React from "react";
+import "../styles/theme.css";
+import "../styles/auth.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const RegisterUser = () => {
+  const Navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const firstName = e.target.firstName.value;
+    const lastName = e.target.lastName.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/user/register",
+      {
+        fullName: firstName + " " + lastName,
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log(response.data);
+
+    Navigate("/");
+  };
+
+  return (
+    <div className="auth-page theme-transition">
+      <div className="auth-card">
+        <div className="auth-brand">
+          <div className="brand-dot" />
+          <div>
+            <div className="brand-title">FoodReels</div>
+            <div className="brand-sub">Create your user account</div>
+          </div>
+        </div>
+
+        <div className="auth-switch">
+          <a className="link" href="/user/register">
+            Register as normal user
+          </a>
+          <span className="muted-sep">·</span>
+          <a className="link" href="/food-partner/register">
+            Register as food partner
+          </a>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="row-two">
+            <div className="form-row">
+              <label>First name</label>
+              <input name="firstName" placeholder="Jane" />
+            </div>
+            <div className="form-row">
+              <label>Last name</label>
+              <input name="lastName" placeholder="Doe" />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" />
+          </div>
+
+          <div className="form-row">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="••••••••" />
+          </div>
+
+          <div className="auth-actions">
+            <div className="small">
+              Already have an account?{" "}
+              <a className="link" href="/user/login">
+                Sign in
+              </a>
+            </div>
+            <button className="btn">Create account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default RegisterUser;
