@@ -107,21 +107,106 @@ export default function Reels() {
     else video.pause();
   };
 
-  const toggleLike = (ev, id) => {
-    ev.stopPropagation();
-    
-    likeVideo(reels.find((r) => r._id === id));
-    setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
+  const likeApiToggle = async (id) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/food/like", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foodId: id }),
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || `Like API error: ${res.status}`);
+      }
+      return true;
+    } catch (err) {
+      console.error("Like API error", err);
+      return false;
+    }
   };
 
-  const toggleSave = (ev, id) => {
+  const saveApiToggle = async (id) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/food/save", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ foodId: id }),
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || `Save API error: ${res.status}`);
+      }
+      return true;
+    } catch (err) {
+      console.error("Save API error", err);
+      return false;
+    }
+  };
+
+  const toggleLike = async (ev, id) => {
     ev.stopPropagation();
+    
+    // optimistic update
+    const prevLiked = !!liked[id];
+    setLiked((prev) => ({ ...prev, [id]: !prevLiked }));
+    setReels((prev) =>
+      prev.map((r) =>
+        r._id === id
+          ? { ...r, likes: (r.likes || 0) + (prevLiked ? -1 : 1) }
+          : r
+      )
+    );
+
+    const ok = await likeApiToggle(id);
+    if (!ok) {
+      // revert
+      setLiked((prev) => ({ ...prev, [id]: prevLiked }));
+      setReels((prev) =>
+        prev.map((r) =>
+          r._id === id
+            ? { ...r, likes: Math.max(0, (r.likes || 0) + (prevLiked ? 1 : -1)) }
+            : r
+        )
+      );
+      alert("Failed to update like. Please try again.");
+    }
+  };
+
+  const toggleSave = async (ev, id) => {
+    ev.stopPropagation();
+
+    const prevSaved = !!saved[id];
+
+    // optimistic update for UI and localStorage (so Saved page still works)
     setSaved((prev) => {
-      const next = { ...prev, [id]: !prev[id] };
+      const next = { ...prev, [id]: !prevSaved };
       const savedArr = Object.keys(next).filter((k) => next[k]);
       localStorage.setItem("savedReels", JSON.stringify(savedArr));
       return next;
     });
+    setReels((prev) =>
+      prev.map((r) =>
+        r._id === id ? { ...r, saves: (r.saves || 0) + (prevSaved ? -1 : 1) } : r
+      )
+    );
+
+    const ok = await saveApiToggle(id);
+    if (!ok) {
+      // revert
+      setSaved((prev) => ({ ...prev, [id]: prevSaved }));
+      setReels((prev) =>
+        prev.map((r) =>
+          r._id === id
+            ? { ...r, saves: Math.max(0, (r.saves || 0) + (prevSaved ? 1 : -1)) }
+            : r
+        )
+      );
+      const savedArr = Object.keys(saved).filter((k) => saved[k]);
+      localStorage.setItem("savedReels", JSON.stringify(savedArr));
+      alert("Failed to update save. Please try again.");
+    }
   };
 
   const openComments = (ev, id) => {
