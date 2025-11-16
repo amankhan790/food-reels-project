@@ -115,9 +115,31 @@ async function saveFood(req, res) {
     save,
   });
 }
+
+async function getSavedFood(req, res) {
+  const user = req.user;
+
+  // Return all saved documents for the user and populate the `food` field.
+  // Previously this used `findOne` which only returned a single document
+  // and caused inconsistent response shapes. Also fix a typo `jason` -> `json`.
+  const savedFoods = await saveModel.find({ user: user._id }).populate("food");
+
+  if (!savedFoods || savedFoods.length === 0) {
+    return res.status(404).json({ message: "No saved food items found." });
+  }
+
+  // Normalize response: return an array of populated food items under `foodItems`
+  const foodItems = savedFoods.map((s) => s.food).filter(Boolean);
+
+  res.status(200).json({
+    message: "Saved food items fetched successfully",
+    foodItems,
+  });
+}
 module.exports = {
   createFood,
   getAllFood,
   likeFood,
   saveFood,
+  getSavedFood,
 };

@@ -1,15 +1,15 @@
-const mogoose = require("mongoose");
+const mongoose = require("mongoose");
 
-const saveSchema = new mogoose.Schema(
+const saveSchema = new mongoose.Schema(
   {
     user: {
-      type: mogoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
     food: {
-      type: mogoose.Schema.Types.ObjectId,
-      ref: "food",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Food",
       required: true,
     },
   },
@@ -17,6 +17,6 @@ const saveSchema = new mogoose.Schema(
     timestamps: true,
   }
 );
-const saveModel = mogoose.model("save", saveSchema);
+const saveModel = mongoose.model("save", saveSchema);
 
 module.exports = saveModel;
