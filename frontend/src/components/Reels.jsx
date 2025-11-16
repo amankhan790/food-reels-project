@@ -192,28 +192,13 @@ export default function Reels() {
       localStorage.setItem("savedReels", JSON.stringify(savedArr));
       return next;
     });
-    setReels((prev) =>
-      prev.map((r) =>
-        r._id === id
-          ? { ...r, saveCount: (r.saveCount || 0) + (prevSaved ? -1 : 1) }
-          : r
-      )
-    );
+    // Note: don't update reel.saveCount here; the display count is already calculated
+    // as (r.saveCount || 0) + (saved[r._id] ? 1 : 0), so we only need to update saved state
 
     const ok = await saveApiToggle(id);
     if (!ok) {
       // revert
       setSaved((prev) => ({ ...prev, [id]: prevSaved }));
-      setReels((prev) =>
-        prev.map((r) =>
-          r._id === id
-            ? {
-                ...r,
-                saves: Math.max(0, (r.saveCount || 0) + (prevSaved ? 1 : -1)),
-              }
-            : r
-        )
-      );
       const savedArr = Object.keys(saved).filter((k) => saved[k]);
       localStorage.setItem("savedReels", JSON.stringify(savedArr));
       alert("Failed to update save. Please try again.");
