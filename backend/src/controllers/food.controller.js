@@ -124,9 +124,9 @@ async function getSavedFood(req, res) {
   // and caused inconsistent response shapes. Also fix a typo `jason` -> `json`.
   const savedFoods = await saveModel.find({ user: user._id }).populate("food");
 
-  if (!savedFoods || savedFoods.length === 0) {
-    return res.status(404).json({ message: "No saved food items found." });
-  }
+  // if (!savedFoods || savedFoods.length === 0) {
+  //   return res.status(404).json({ message: "No saved food items found." });
+  // }
 
   // Normalize response: return an array of populated food items under `foodItems`
   const foodItems = savedFoods.map((s) => s.food).filter(Boolean);

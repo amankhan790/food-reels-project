@@ -41,13 +41,12 @@ export default function Reels() {
           setReels(items);
           console.log(items);
 
-          // initialize liked/saved state from server data and localStorage
-          const savedIds = JSON.parse(localStorage.getItem("savedReels")) || [];
+          // initialize liked/saved state from server data only (no localStorage)
           const initLiked = {};
           const initSaved = {};
           items.forEach((it) => {
             initLiked[it._id] = false;
-            initSaved[it._id] = savedIds.includes(it._id);
+            initSaved[it._id] = false;
           });
           setLiked(initLiked);
           setSaved(initSaved);
@@ -185,22 +184,13 @@ export default function Reels() {
 
     const prevSaved = !!saved[id];
 
-    // optimistic update for UI and localStorage (so Saved page still works)
-    setSaved((prev) => {
-      const next = { ...prev, [id]: !prevSaved };
-      const savedArr = Object.keys(next).filter((k) => next[k]);
-      localStorage.setItem("savedReels", JSON.stringify(savedArr));
-      return next;
-    });
-    // Note: don't update reel.saveCount here; the display count is already calculated
-    // as (r.saveCount || 0) + (saved[r._id] ? 1 : 0), so we only need to update saved state
+    // optimistic update for UI only (no localStorage)
+    setSaved((prev) => ({ ...prev, [id]: !prevSaved }));
 
     const ok = await saveApiToggle(id);
     if (!ok) {
       // revert
       setSaved((prev) => ({ ...prev, [id]: prevSaved }));
-      const savedArr = Object.keys(saved).filter((k) => saved[k]);
-      localStorage.setItem("savedReels", JSON.stringify(savedArr));
       alert("Failed to update save. Please try again.");
     }
   };

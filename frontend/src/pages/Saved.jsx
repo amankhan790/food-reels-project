@@ -24,7 +24,8 @@ const Saved = () => {
         });
 
         if (!res.ok) {
-          if (res.status === 401) throw new Error("Unauthorized. Please log in.");
+          if (res.status === 401)
+            throw new Error("Unauthorized. Please log in.");
           const txt = await res.text();
           throw new Error(txt || `Fetch error: ${res.status}`);
         }
@@ -66,17 +67,37 @@ const Saved = () => {
     };
   }, []);
 
-  if (loading) return <div style={{ color: "#fff", padding: 20 }}>Loading saved...</div>;
+  if (loading)
+    return <div style={{ color: "#fff", padding: 20 }}>Loading saved...</div>;
   if (error) return <div style={{ color: "#fff", padding: 20 }}>{error}</div>;
-  if (items.length === 0) return <div style={{ color: "#fff", padding: 20 }}>No saved items yet.</div>;
+  if (items.length === 0)
+    return (
+      <h2 style={{ color: "#fff", padding: 20 }}>No saved items yet.</h2>
+    );
 
   return (
     <div style={{ padding: 12 }}>
       <h2 style={{ color: "#fff" }}>Saved</h2>
-      <div className="videos-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12 }}>
+      <div
+        className="videos-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+          gap: 12,
+        }}
+      >
         {items.map((it) => (
-          <div key={it._id} className="video-tile" onClick={() => navigate("/") }>
-            <video src={it.video} className="video-tile-content" muted playsInline />
+          <div
+            key={it._id}
+            className="video-tile"
+            onClick={() => navigate("/")}
+          >
+            <video
+              src={it.video}
+              className="video-tile-content"
+              muted
+              playsInline
+            />
             <div className="video-overlay">
               <span className="video-label">video</span>
             </div>
