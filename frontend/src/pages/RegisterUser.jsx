@@ -16,7 +16,7 @@ const RegisterUser = () => {
     const password = e.target.password.value;
 
     const response = await axios.post(
-      "http://localhost:3000/api/auth/user/register",
+      `${process.env.REACT_APP_API_URL}/api/auth/user/register`,
       {
         fullName: firstName + " " + lastName,
         email,
