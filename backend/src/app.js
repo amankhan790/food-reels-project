@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 app.use(
   cors({
-    origin: "https://food-reels-project-1.onrender.com",
+    origin: ["https://food-reels-project-1.onrender.com"],
     credentials: true,
   })
 );
