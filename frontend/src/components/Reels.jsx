@@ -39,7 +39,6 @@ export default function Reels() {
           // controller returns { message, foodItems }
           const items = Array.isArray(data.foodItems) ? data.foodItems : [];
           setReels(items);
-          console.log(items);
 
           // initialize liked/saved state from server data only (no localStorage)
           const initLiked = {};
@@ -361,6 +360,27 @@ export default function Reels() {
                 />
               </svg>
               <div className="nav-label">home</div>
+            </button>
+            <button
+              className="nav-btn"
+              onClick={(ev) => {
+                ev.stopPropagation();
+                navigate("/create-food");
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                  fill="currentColor"
+                />
+              </svg>
+              <div className="nav-label">create</div>
             </button>
             <button
               className="nav-btn"
